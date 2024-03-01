@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 #Bash script that pings an IP address passed as an argument
 
-if [ $# -ne 1 ]
-then
-	echo "Usage: $0 {IP_ADDRESS}"
-	exit 1
-fi
+IP="${1}"
 
-if ! [ -x "$(command -v ping)" ]
-then 
-	echo 'Error: ping is not installed.' >&2
-	exit 1
+fn=$(basename "${BASH_SOURCE[@]}")
+
+if ! [ "$IP" ]; then
+	echo "Usage: ${fn} {IP_ADDRESS}"
+else
+	ping -c 5 "${IP}"
 fi
-ping -c 5 "$1"
