@@ -1,24 +1,8 @@
 #!/usr/bin/env bash
 # Install Nginx on web server
 
-# Install Nginx
-apt-get -y update
-apt-get install -y nginx
-ufw allow 'Nginx HTTP'
-
-# Configure Nginx to listen on port 80
-sed -i 's/listen 80 default_server;/listen 80;/g' /etc/nginx/sites-available/default
-
-# Restart Nginx (without using systemctl)
-service nginx restart > /dev/null 2>&1 || /etc/init.d/nginx restart > /dev/null 2>&1
-
-# Create index.html with "Hello World!" content
-echo "Hello World!" > /usr/share/nginx/html/index.html
-
-# Verify Nginx is running and serving "Hello World!" on root
-curl -s localhost | grep -q "Hello World!"
-if [ $? -eq 0 ]; then
-    echo "Nginx installed and configured successfully. Root page returns 'Hello World!'"
-else
-    echo "Nginx installation or configuration failed."
-fi
+sudo apt-get -y update
+sudo apt-get -y install nginx
+sudo ufw allow "Nginx HTTP"
+echo 'Hello World!' > /var/www/html/index.html
+sudo service nginx start
