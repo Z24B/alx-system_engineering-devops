@@ -2,6 +2,7 @@
 apt-get -y update
 apt-get -y install nginx
 service nginx start
+sudo chown -R ubuntu /var/www
 echo "Hello World!" > /var/www/html/index.nginx-debian.html
-sed -i "/server_name _;/ a\\\trewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default
-service nginx restart
+sudo sed -i "30i \\\trewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;"
+sudo service nginx restart
