@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# add a custom Nginx response header X-Served-By
+
+sudo apt-get -y update
+sudo apt-get -y install nginx
+
+# Allow incoming HTTP traffic
+sudo ufw allow "Nginx HTTP"
+
+# Create a default Nginx HTML file
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+
+# Add redirection rule
+sed -i "/server_name _;/ a\\\trewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default
+
+# Create a custom 404 page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html
+
+# Configure custom HTTP response header
+echo 'add_header X-Served-By $hostname;' | sudo tee -a /etc/nginx/nginx.conf
+
+sudo service nginx restart
