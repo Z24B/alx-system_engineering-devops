@@ -23,7 +23,12 @@ file { '/etc/nginx/sites-available/custom_header':
 file { '/etc/nginx/sites-enabled/custom_header':
   ensure => 'link',
   target => '/etc/nginx/sites-available/custom_header',
-  notify => Service['nginx'],
   require => File['/etc/nginx/sites-available/custom_header'],
+  notify => Service['nginx'], # Notify Nginx service to reload configuration
 }
 
+# Define the service resource for Nginx
+service { 'nginx':
+  ensure => 'running',
+  enable => true,
+}
