@@ -18,23 +18,8 @@ sed -i "/server_name _;/ a\\\trewrite ^/redirect_me https://www.youtube.com/watc
 # Create a custom 404 page
 echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html
 
-# Configure custom HTTP response header
-echo 'add_header X-Served-By $hostname;' | sudo tee -a /etc/nginx/nginx.conf
+# Configure custom Nginx response header
+sed -i "/listen 80 default_server/a \\\tadd_header X-Served-By $(hostname);" /etc/nginx/sites-available/default
 
 # Restart Nginx to apply changes
 sudo service nginx restart
-=======
-apt-get update
-apt-get -y install nginx
-
-# Allow incoming HTTP traffic
-ufw allow 'Nginx HTTP'
-echo "Holberton School" > /var/www/html/index.nginx-debian.html
-echo "Ceci n'est pas une page" > /usr/share/nginx/html/custom_404.html
-sed -i "/listen 80 default_server/a \\\trewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default
-sed -i "/listen 80 default_server/a \\\terror_page 404 /custom_404.html; location = /custom_404.html {root /usr/share/nginx/html;\n\tinternal;}" /etc/nginx/sites-available/default
-
-# Configure custom HTTP response header
-sed -i "/listen 80 default_server/a \\\tadd_header X-Served-By $(hostname);" /etc/nginx/sites-available/default
-service nginx restart
->>>>>>> 028166e9fceda7aee649aa4d1b627c448519ac36
