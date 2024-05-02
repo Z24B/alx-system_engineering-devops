@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# This script displays information about subdomains
+
+# Function to display subdomain information
+query_dns() {
+    local domain="$1"
+    local subdomain="$2"
+    
+    # If subdomain is not provided, set default subdomains
+    if [ -z "$subdomain" ]; then
+        subdomains=("www" "lb-01" "web-01" "web-02")
+    else
+        subdomains=("$subdomain")
+    fi
+    
+    # Iterate over each subdomain and query DNS records
+    for sub in "${subdomains[@]}"; do
+        record_type=$(dig +short -t CNAME "$sub.$domain" | awk '{print "CNAME"}')
+        if [ -z "$record_type" ]; then
+            record_type=$(dig +short -t A "$sub.$domain" | awk '{print "A"}')
+            destination=$(dig +short "$sub.$domain")
+        else
+            destination=$(dig +short "$sub.$domain")
+        fi
+        echo "The subdomain $sub is a $record_type record and points to $destination"
+    done
+}
+
+# Check if domain argument is provided
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 DOMAIN [SUBDOMAIN]"
+    exit 1
+fi
+
+# Extract domain and subdomain arguments
+domain="$1"
+subdomain="$2"
+
+# Call query_dns function with provided arguments
+query_dns "$domain" "$subdomain"
