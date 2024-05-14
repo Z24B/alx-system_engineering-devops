@@ -3,15 +3,16 @@
 
 # Update package lists
 sudo apt-get update
-
-# Stop Apache2 if running
-sudo pkill apache2
+chmod ugo+wrx /etc/apache2/ports.conf /etc/nginx/nginx.conf
 
 # Modify nginx configuration to run as nginx user
-sudo sed -i 's/user www-data;/user nginx;/' /etc/nginx/nginx.conf
+sudo sed -i 's/#user www-data;/user nginx;/g' /etc/nginx/nginx.conf
 
 # Modify nginx configuration to listen on port 8080
-sudo sed -i 's/80 default_server/8080 default_server/' /etc/nginx/sites-available/default
+sed -i 's/Listen 8080/#Listen 8080/g' /etc/apache2/ports.conf
+sed -i 's/80/8080/g' /etc/nginx/sites-available/default
+
+pkill -1 apache2
 
 # Start nginx service
-sudo service nginx start
+sudo -u nginx service nginx restart
