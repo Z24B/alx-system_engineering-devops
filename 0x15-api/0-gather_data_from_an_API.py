@@ -1,21 +1,17 @@
 #!/usr/bin/python3
 """
-This script gathers information about an employee's TODO list progress
+Checks student output for returning info from REST API
 """
 
 import requests
 import sys
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2 or not sys.argv[1].isdigit():
-        print("Usage: {} <employee_id>".format(sys.argv[0]))
-        sys.exit(1)
 
-    employee_id = int(sys.argv[1])
+def check_tasks(id):
+    """ Fetch user name, number of tasks """
 
-    base_url = "https://jsonplaceholder.typicode.com"
-    user_url = f"{base_url}/users/{employee_id}"
-    todo_url = f"{base_url}/todos?userId={employee_id}"
+    user_url = f"https://jsonplaceholder.typicode.com/users/{id}"
+    todo_url = f"https://jsonplaceholder.typicode.com/todos?userId={id}"
 
     try:
         user_response = requests.get(user_url)
@@ -39,3 +35,7 @@ if __name__ == "__main__":
     except requests.exceptions.RequestException as e:
         print("Error fetching data:", e)
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    check_tasks(int(sys.argv[1]))
