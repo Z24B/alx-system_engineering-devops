@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 """Export data to CSV."""
-
-import sys
-import requests
 import csv
+import requests
+import sys
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or not sys.argv[1].isdigit():
@@ -12,27 +11,27 @@ if __name__ == "__main__":
 
     employee_id = int(sys.argv[1])
 
-    url = 'https://jsonplaceholder.typicode.com/todos?userId={}'.format(
+    # Fetch todos for the given employee ID
+    todos_url = 'https://jsonplaceholder.typicode.com/todos?userId={}'.format(
             employee_id)
-    response = requests.get(url)
-    todos = response.json()
+    todos_response = requests.get(todos_url)
+    todos = todos_response.json()
 
+    # Fetch user info for the given employee ID
     user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(
             employee_id)
     user_response = requests.get(user_url)
     user_info = user_response.json()
-    employee_name = user_info.get('name')
     username = user_info.get('username')
 
+    # CSV file name
     csv_file = "{}.csv".format(employee_id)
+
+    # Write to CSV
     with open(csv_file, mode='w', newline='') as file:
         writer = csv.writer(file, quoting=csv.QUOTE_ALL)
-        writer.writerow(["USER_ID",
-                        "USERNAME", "TASK_COMPLETED_STATUS", "TASK_TITLE"])
         for task in todos:
             writer.writerow([employee_id,
-                            username,
-                            task['completed'],
-                            task['title']])
+                            username, task['completed'], task['title']])
 
     print("CSV file generated: {}".format(csv_file))
