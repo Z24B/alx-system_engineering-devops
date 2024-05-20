@@ -34,4 +34,3 @@ if __name__ == "__main__":
     with open(json_file, 'w') as file:
         json.dump(all_tasks, file)
 
-    print("JSON file generated: {}".format(json_file))
