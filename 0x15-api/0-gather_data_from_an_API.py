@@ -21,7 +21,7 @@ if __name__ == "__main__":
         user_response = requests.get(user_url)
         user_response.raise_for_status()
         user_data = user_response.json()
-        
+
         todo_response = requests.get(todo_url)
         todo_response.raise_for_status()
         todo_data = todo_response.json()
@@ -29,9 +29,10 @@ if __name__ == "__main__":
         done_tasks = [task for task in todo_data if task['completed']]
         total_tasks = len(todo_data)
         num_done_tasks = len(done_tasks)
-        
-        print("Employee {} is done with tasks({}/{}):".format(user_data['name'], num_done_tasks, total_tasks))
-        
+
+        print("Employee {} is done with tasks({}/{}):".format(
+            user_data['name'], num_done_tasks, total_tasks))
+
         for task in done_tasks:
             print("\t{}".format(task['title']))
 
